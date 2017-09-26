@@ -150,7 +150,6 @@ function HCSPlugins_getGCalEvents($offset = 0) {
 						) {
 							$eventicon = 'runner';
 				}
-				/**/
 				switch ($eventicon) {
 					case 'apple':
 					$eventicon = 'http://brettgoodrich.com/school/wp-content/uploads/sites/2/2017/07/icon-apple-white.png';
@@ -169,19 +168,23 @@ function HCSPlugins_getGCalEvents($offset = 0) {
 					break;
 				}
 
+				// WRITING VARIOUS VARIABLES
         $eventdate = new DateTime($eventDateStr,$timezone);
         $link = $event->htmlLink;
         $TZlink = $link . "&ctz=" . $calTimeZone; //ADD TZ TO EVENT LINK
-        //PREVENTS GOOGLE FROM DISPLAYING EVERYTHING IN GMT
         $eventarrayposition = $eventdate->format("Ymj");
+				$location = (strpos($event->location, 'google') !== false // If it's a Google Maps link...
+						? '<a href="'.$event->location.'" class="hcs-events-table-mapicon buttonstyle notextx" target="_blank"><span>Map</span></a>' // ...add the "Maps" button.
+						: '<span class="hcs-events-table-location">'.$event->location.'</span>'
+				);
         $thisevent = array(
           'title' => $event->summary,
           'date' => $eventdate,
-					'time' => ($isAllDayEvent ? 'All Day' : $eventdate->format("g").($eventdate->format("i") != '00' ? $eventdate->format(":i") : '').$eventdate->format("a")),
+					'time' => ($isAllDayEvent ? 'All Day' : $eventdate->format("g").(true/*$eventdate->format("i") != '00'*/ ? $eventdate->format(":i") : '').'<span class="ampm">'.$eventdate->format("a").'</span>'),
 					'icon' => $eventicon,
           //'eventlink' => $link . "&ctz=" . $calTimeZone//,
           'eventObject' => $event,
-					'location' => $event->location
+					'location' => $location
         );
 
         //PUT EVENTS INTO AN ARRAY BY DAY
@@ -236,7 +239,7 @@ function HCSPlugins_getGCalEvents($offset = 0) {
             ?>
 							<tr>
 								<td class="hcs-events-table-icon"><img src="<?php echo $singleevent['icon'];?>" alt=""/></td>
-								<td><?php echo $singleevent['title'];?><br/><span class="hcs-events-table-time"><?php echo $singleevent['time'].($singleevent['location'] ? ' &bull; '.$singleevent['location'] : '');?></span></td>
+								<td><?php echo $singleevent['title'];?><br/><span class="hcs-events-table-time"><?php echo $singleevent['time'].($singleevent['location'] ? '<span class="separator">&bull;</span>'.$singleevent['location'] : '');?></span></td>
 								<?php /** echo '<!--'; print_r($singleevent['eventObject']); echo '-->'; /**/ ?>
             	</tr><?php
           }
