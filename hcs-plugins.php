@@ -174,7 +174,7 @@ function HCSPlugins_getGCalEvents($offset = 0) {
         $TZlink = $link . "&ctz=" . $calTimeZone; //ADD TZ TO EVENT LINK
         $eventarrayposition = $eventdate->format("Ymj");
 				$location = (strpos($event->location, 'google') !== false // If it's a Google Maps link...
-						? '<a href="'.$event->location.'" class="hcs-events-table-mapicon buttonstyle notextx" target="_blank" onClick="ga(\'send\', \'event\', \'Button\', \'Click\', \'Map\');"><span>Map</span></a>' // ...add the "Maps" button.
+						? '<a href="'.$event->location.'" class="hcs-events-table-mapicon buttonstyle notextx" target="_blank"><span>Map</span></a>' // ...add the "Maps" button.
 						: $event->location
 				);
         $thisevent = array(
